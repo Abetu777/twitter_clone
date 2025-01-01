@@ -42,11 +42,9 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-@app.before_first_request
-def apply_migrations():
-    """データベースのマイグレーションを自動適用"""
-    with app.app_context():
-        upgrade()  # マイグレーションを適用
+# アプリケーション開始時にマイグレーションを適用
+with app.app_context():
+    upgrade()
 
 # ホームページ
 @app.route("/")
