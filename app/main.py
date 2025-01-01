@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from datetime import datetime
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 import os
+
 
 # Flaskアプリケーション初期化
 app = Flask(__name__)
@@ -40,6 +41,12 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.before_first_request
+def apply_migrations():
+    """データベースのマイグレーションを自動適用"""
+    with app.app_context():
+        upgrade()  # マイグレーションを適用
 
 # ホームページ
 @app.route("/")
