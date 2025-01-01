@@ -5,7 +5,6 @@ from datetime import datetime
 from flask_migrate import Migrate, init, migrate, upgrade
 import os
 
-
 # Flaskアプリケーション初期化
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
