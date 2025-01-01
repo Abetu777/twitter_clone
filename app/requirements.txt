@@ -1,5 +1,6 @@
-Flask>=2.0.0
-Flask-Migrate
+Flask
 Flask-SQLAlchemy
+Flask-Migrate
 Flask-Bcrypt
 gunicorn
+psycopg2-binary

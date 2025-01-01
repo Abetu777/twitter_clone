@@ -10,12 +10,20 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# Render環境またはローカル環境のデータベース設定
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
-    'DATABASE_URL',
-    'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance/app.db')
-)
+
+# データベース設定: PostgreSQL (本番) または SQLite (ローカル)
+if os.getenv("DATABASE_URL"):
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance/app.db')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# SQLite用ディレクトリの確認と作成 (ローカル環境用)
+if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
+    instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance')
+    if not os.path.exists(instance_path):
+        os.makedirs(instance_path)
 
 # SQLite用ディレクトリの確認と作成
 instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance')
@@ -43,8 +51,13 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 # アプリケーション開始時にマイグレーションを適用
-with app.app_context():
-    upgrade()
+try:
+    with app.app_context():
+        upgrade()
+    print("Database migration applied successfully.")
+except Exception as e:
+    print(f"Error applying migrations: {e}")
+
 
 # ホームページ
 @app.route("/")
