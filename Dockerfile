@@ -1,10 +1,17 @@
-FROM python:3.8-slim
+# ベースイメージ
+FROM python:3.9-slim
 
+# 作業ディレクトリを設定
 WORKDIR /app
 
-COPY app/requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# 必要なファイルをコピー
+COPY app/ /app/
 
-COPY app/ .
+# 依存パッケージをインストール
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+# ポートの指定（Flaskのデフォルトポート）
+EXPOSE 5000
+
+# Flaskアプリケーションを起動
+CMD ["python", "main.py"]

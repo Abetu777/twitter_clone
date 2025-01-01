@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Your Dashboard</h1>
+    <form action="/create_post" method="POST">
+      <textarea name="content" placeholder="Write something..." required></textarea><br>
+      <button type="submit">Post</button>
+    </form>
+    <h2>Your Posts</h2>
+    <ul>
+      {% for post in posts %}
+        <li>{{ post.content }}</li>
+      {% endfor %}
+    </ul>
+    <form action="/logout" method="POST">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+</body>
+</html>
