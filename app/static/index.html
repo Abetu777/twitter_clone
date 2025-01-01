@@ -4,18 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Twitter Clone</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Twitter Clone</h1>
-  <form id="post-form">
-    <textarea id="post-content" placeholder="What's on your mind?" rows="3" cols="50"></textarea><br>
-    <button type="submit">Post</button>
-  </form>
-  <h2>Posts</h2>
-  <ul id="posts-list"></ul>
+  <div class="container">
+    <h1>Twitter Clone</h1>
+    <form id="post-form">
+      <textarea id="post-content" placeholder="What's on your mind?" rows="3" cols="50"></textarea><br>
+      <button type="submit">Post</button>
+    </form>
+    <h2>Posts</h2>
+    <ul id="posts-list"></ul>
+  </div>
 
   <script>
-    const API_URL = "https://twitter-clone-1y1n.onrender.com/posts";
+    const API_URL = "/posts";
 
     // Fetch and display posts
     async function fetchPosts() {
@@ -26,6 +29,7 @@
       posts.forEach(post => {
         const li = document.createElement("li");
         li.textContent = post.content;
+        li.className = "post-item"; // Add class for styling
         postsList.appendChild(li);
       });
     }
