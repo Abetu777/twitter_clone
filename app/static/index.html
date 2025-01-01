@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitter Clone</title>
+</head>
+<body>
+  <h1>Twitter Clone</h1>
+  <form id="post-form">
+    <textarea id="post-content" placeholder="What's on your mind?" rows="3" cols="50"></textarea><br>
+    <button type="submit">Post</button>
+  </form>
+  <h2>Posts</h2>
+  <ul id="posts-list"></ul>
+
+  <script>
+    const API_URL = "https://twitter-clone-1y1n.onrender.com/posts";
+
+    // Fetch and display posts
+    async function fetchPosts() {
+      const response = await fetch(API_URL);
+      const posts = await response.json();
+      const postsList = document.getElementById("posts-list");
+      postsList.innerHTML = ""; // Clear current list
+      posts.forEach(post => {
+        const li = document.createElement("li");
+        li.textContent = post.content;
+        postsList.appendChild(li);
+      });
+    }
+
+    // Handle form submission
+    document.getElementById("post-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const content = document.getElementById("post-content").value;
+      if (!content) {
+        alert("Content cannot be empty!");
+        return;
+      }
+      await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content })
+      });
+      document.getElementById("post-content").value = ""; // Clear input
+      fetchPosts(); // Refresh posts
+    });
+
+    // Initial fetch
+    fetchPosts();
+  </script>
+</body>
+</html>
