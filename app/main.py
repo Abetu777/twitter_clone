@@ -18,7 +18,7 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# SQLite用ディレクトリの確認と作成 (ローカル環境用)
+# SQLite用ディレクトリの確認と作成
 if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
     instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance')
     if not os.path.exists(instance_path):
@@ -50,9 +50,9 @@ try:
         migrations_path = os.path.join(os.getcwd(), 'migrations')
         if not os.path.exists(migrations_path):
             print("Migrations folder not found. Initializing...")
-            init()
-            migrate(message="Initial migration")
-        upgrade()
+            init()  # Migrationsフォルダを初期化
+            migrate(message="Initial migration")  # マイグレーションスクリプトを生成
+        upgrade()  # マイグレーションを適用
         print("Database migration applied successfully.")
 except Exception as e:
     print(f"Error applying migrations: {e}")
