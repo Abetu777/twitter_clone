@@ -8,12 +8,18 @@ import os
 # Flaskアプリケーション初期化
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/app.db'
+
+# Render環境またはローカル環境のデータベース設定
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'DATABASE_URL',
+    'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance/app.db')
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# データベースの絶対パスを設定
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance/app.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# SQLite用ディレクトリの確認と作成
+instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance')
+if not os.path.exists(instance_path):
+    os.makedirs(instance_path)
 
 # データベースとBcryptの初期化
 db = SQLAlchemy(app)
@@ -35,7 +41,6 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 # ホームページ
 @app.route("/")
 def home():
@@ -43,12 +48,11 @@ def home():
         return redirect(url_for("dashboard"))
     return render_template("index.html")
 
-# ダッシュボード（ログインユーザー専用）
+# ダッシュボード
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
         return redirect(url_for("login_page"))
-    # すべての投稿を取得（新しい順）
     posts = Post.query.order_by(Post.id.desc()).all()
     return render_template("dashboard.html", posts=posts)
 
@@ -97,5 +101,6 @@ def create_post():
     db.session.commit()
     return redirect(url_for("dashboard"))
 
+# アプリケーション起動
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

@@ -1,7 +1,10 @@
 services:
   - type: web
     name: twitter-clone
-    env: docker
-    plan: free
-    dockerfilePath: ./Dockerfile
-    region: oregon
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app.main:app"
+    mounts:
+      - type: volume
+        name: instance
+        path: /opt/render/project/src/instance
