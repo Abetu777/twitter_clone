@@ -1,10 +1,22 @@
 import os
 from flask import Flask, request, jsonify, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# 仮のデータベース
-posts = []
+# データベースの設定
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# データベースモデル
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+
+# データベース初期化
+with app.app_context():
+    db.create_all()
 
 @app.route("/", methods=["GET"])
 def home():
@@ -12,15 +24,18 @@ def home():
 
 @app.route("/posts", methods=["GET"])
 def get_posts():
-    return jsonify(posts)
+    posts = Post.query.all()
+    return jsonify([{"id": post.id, "content": post.content} for post in posts])
 
 @app.route("/posts", methods=["POST"])
 def create_post():
     data = request.json
     if not data or "content" not in data:
         return jsonify({"error": "Invalid input"}), 400
-    posts.append({"id": len(posts) + 1, "content": data["content"]})
-    return jsonify(posts[-1]), 201
+    new_post = Post(content=data["content"])
+    db.session.add(new_post)
+    db.session.commit()
+    return jsonify({"id": new_post.id, "content": new_post.content}), 201
 
 # 静的ファイルのホスティング
 @app.route("/static/<path:path>")
