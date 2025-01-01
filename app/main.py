@@ -46,15 +46,15 @@ class Post(db.Model):
 # Render環境でのマイグレーションフォルダの確認と初期化
 try:
     with app.app_context():
-        migrations_path = os.path.join(os.getcwd(), 'migrations')
-        if not os.path.exists(migrations_path):
+        if not os.path.exists(os.path.join(os.getcwd(), 'migrations')):
             print("Migrations folder not found. Initializing...")
             init()  # Migrationsフォルダを初期化
             migrate(message="Initial migration")  # マイグレーションスクリプトを生成
+        print("Applying migrations...")
         upgrade()  # マイグレーションを適用
         print("Database migration applied successfully.")
 except Exception as e:
-    print(f"Error applying migrations: {e}")
+    print(f"Error during migration: {e}")
 
 # ホームページ
 @app.route("/")
