@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Dashboard</title>
 </head>
 <body>
-  <div class="container">
-    <h1>Your Dashboard</h1>
-    <form action="/create_post" method="POST">
-      <textarea name="content" placeholder="Write something..." required></textarea><br>
-      <button type="submit">Post</button>
+    <h1>Dashboard</h1>
+    
+    <!-- Logoutフォーム -->
+    <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+        <button type="submit">Logout</button>
     </form>
-    <h2>Your Posts</h2>
-    <ul>
-      {% for post in posts %}
-        <li>{{ post.content }}</li>
-      {% endfor %}
-    </ul>
-    <form action="/logout" method="POST">
-      <button type="submit">Logout</button>
+
+    <!-- Post作成フォーム -->
+    <form action="{{ url_for('create_post') }}" method="POST">
+        <textarea name="content" placeholder="What's on your mind?" required></textarea>
+        <button type="submit">Post</button>
     </form>
-  </div>
+    
+    <h2>All Posts</h2>
+    <div>
+        {% for post in posts %}
+            <div>
+                <p><strong>{{ post.user.username }}</strong>: {{ post.content }}</p>
+                <!-- タイムスタンプを表示 -->
+                <small>Posted on: {{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+            </div>
+        {% endfor %}
+    </div>
+    
 </body>
 </html>

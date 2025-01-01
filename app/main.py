@@ -1,29 +1,40 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from datetime import datetime
+from flask_migrate import Migrate
+import os
 
 # Flaskアプリケーション初期化
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# データベースの絶対パスを設定
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance/app.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# データベースとBcryptの初期化
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+# Flask-Migrateの初期化
+migrate = Migrate(app, db)
 
 # データベースモデル定義
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(150), nullable=False)
+    posts = db.relationship('Post', backref='user', lazy=True)
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-# データベース初期化
-with app.app_context():
-    db.create_all()
 
 # ホームページ
 @app.route("/")
@@ -37,8 +48,8 @@ def home():
 def dashboard():
     if "user_id" not in session:
         return redirect(url_for("login_page"))
-    user_id = session["user_id"]
-    posts = Post.query.filter_by(user_id=user_id).all()
+    # すべての投稿を取得（新しい順）
+    posts = Post.query.order_by(Post.id.desc()).all()
     return render_template("dashboard.html", posts=posts)
 
 # ユーザー登録
