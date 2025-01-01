@@ -2,14 +2,13 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from datetime import datetime
-from flask_migrate import Migrate, upgrade
+from flask_migrate import Migrate, init, migrate, upgrade
 import os
 
 
 # Flaskアプリケーション初期化
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-
 
 # データベース設定: PostgreSQL (本番) または SQLite (ローカル)
 if os.getenv("DATABASE_URL"):
@@ -24,11 +23,6 @@ if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
     instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance')
     if not os.path.exists(instance_path):
         os.makedirs(instance_path)
-
-# SQLite用ディレクトリの確認と作成
-instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../instance')
-if not os.path.exists(instance_path):
-    os.makedirs(instance_path)
 
 # データベースとBcryptの初期化
 db = SQLAlchemy(app)
@@ -50,14 +44,18 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-# アプリケーション開始時にマイグレーションを適用
+# Render環境でのマイグレーションフォルダの確認と初期化
 try:
     with app.app_context():
+        migrations_path = os.path.join(os.getcwd(), 'migrations')
+        if not os.path.exists(migrations_path):
+            print("Migrations folder not found. Initializing...")
+            init()
+            migrate(message="Initial migration")
         upgrade()
-    print("Database migration applied successfully.")
+        print("Database migration applied successfully.")
 except Exception as e:
     print(f"Error applying migrations: {e}")
-
 
 # ホームページ
 @app.route("/")
