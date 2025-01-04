@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: your-app-name
+    env: docker
+    plan: free
+    buildCommand: ""
+    startCommand: ""
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        value: postgresql://user:password@db:5432/production_db
