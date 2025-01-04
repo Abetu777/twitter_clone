@@ -1,13 +1,5 @@
 services:
   - type: web
     name: twitter-clone
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: |
-      flask db upgrade &&
-      gunicorn app.main:app
-    mounts:
-      - type: volume
-        name: instance
-        path: /opt/render/project/src/instance
-
+    env: docker
+    dockerfilePath: ./Dockerfile
