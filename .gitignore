@@ -1,0 +1,13 @@
+# Python関連
+__pycache__/
+*.pyc
+*.pyo
+
+# SQLiteデータベースファイル (必要であれば無視)
+instance/*.db
+
+# 環境変数ファイル
+.env
+
+# Flask関連
+migrations/versions/*.pyc
