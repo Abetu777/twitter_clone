@@ -11,3 +11,6 @@ instance/*.db
 
 # Flask関連
 migrations/versions/*.pyc
+
+#仮想環境
+venv/

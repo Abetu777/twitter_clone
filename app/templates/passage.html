@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ passage.title }}</title>
+</head>
+<body>
+    <h1>{{ passage.title }}</h1>
+    <p>{{ passage.content }}</p>
+    <form method="POST">
+        {% for question in passage.questions %}
+            <div>
+                <p><strong>{{ loop.index }}. {{ question.question_text }}</strong></p>
+                {% for choice in question.choices.split(',') %}
+                    <label>
+                        <!-- name 属性を各質問の ID に基づいて一意に設定 -->
+                        <input type="radio" name="question_{{ question.id }}" value="{{ choice }}">
+                        {{ choice }}
+                    </label><br>
+                {% endfor %}
+            </div>
+            <hr>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

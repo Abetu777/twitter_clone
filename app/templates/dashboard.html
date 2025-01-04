@@ -15,7 +15,7 @@
         </header>
         
         <!-- Post作成フォーム -->
-        <form action="{{ url_for('create_post') }}" method="POST" class="post-form">
+        <form action="{{ url_for('routes.create_post') }}" method="POST" class="post-form">
             <textarea name="content" placeholder="What's on your mind?" required></textarea>
             <button type="submit">Post</button>
         </form>
@@ -30,8 +30,19 @@
             {% endfor %}
         </div>
     </div>
-    <form action="{{ url_for('logout') }}" method="POST" class="logout-form">
+    <div>
+      <h2>Welcome, {{ user.username if user else "Guest"}}</h2>
+      {% if score %}
+          <p>Your Last Test Score: {{ score }}</p>
+      {% else %}
+          <p>You haven't taken a test yet.</p>
+      {% endif %}
+  </div>
+  
+    <a href="{{ url_for('routes.take_test') }}" class="btn btn-primary">Take Test</a>
+    <form action="{{ url_for('routes.logout') }}" method="POST" class="logout-form">
       <button type="submit">Logout</button>
+
   </form>
 </body>
 </html>

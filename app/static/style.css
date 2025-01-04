@@ -83,3 +83,12 @@ button:hover {
   color: #555;
   font-size: 12px;
 }
+
+form {
+  margin: 20px auto;
+  max-width: 600px;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+}
