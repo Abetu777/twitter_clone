@@ -7,13 +7,15 @@ services:
       - "5000:5000"
     depends_on:
       - db  # webサービスがdbサービスを依存するように指定
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/mydatabase"  # dbの接続設定
+    command: ["./entrypoint.sh"]  # entrypoint.shを実行
 
   db:
     image: postgres:latest
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-        value: mydatabase
-      POSTGRES_DB:
+      POSTGRES_DB: mydatabase
     ports:
       - "5432:5432"
