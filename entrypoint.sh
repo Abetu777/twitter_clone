@@ -1,7 +1,7 @@
 #!/bin/bash
 # wait-for-db.shを使用して、DBが接続可能になるまで待機
 echo "Waiting for the database to be available..."
-until nc -z -v -w30 udatabase 5432
+until nc -z -v -w30 mydatabase 5432
 do
   echo "Waiting for database connection..."
   sleep 1
