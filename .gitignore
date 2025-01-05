@@ -8,6 +8,8 @@ instance/*.db
 
 # 環境変数ファイル
 .env
+venv
+
 
 # Flask関連
 migrations/versions/*.pyc
