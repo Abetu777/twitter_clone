@@ -1,12 +1,10 @@
-services:
+ervices:
   - type: web
-    name: your-app-name
-    env: docker
+    name: your-service-name
+    env: python
     plan: free
-    buildCommand: ""
-    startCommand: ""
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app.main:app --bind 0.0.0.0:5000"
     envVars:
-      - key: FLASK_ENV
-        value: production
       - key: DATABASE_URL
-        value: postgresql://user:password@db:5432/production_db
+        value: postgresql://user:password@db:5432/mydatabase
