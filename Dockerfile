@@ -2,7 +2,10 @@
 FROM python:3.9-slim
 
 # 必要なツールをインストール（ncを含む）
-RUN apt-get update && apt-get install -y netcat
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    netcat \
+    && rm -rf /var/lib/apt/lists/*
 
 # 作業ディレクトリを設定
 WORKDIR /app
