@@ -5,11 +5,10 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # 必要なファイルをコピー
-COPY app/ /app/
-COPY entrypoint.sh /entrypoint.sh
+COPY . /app/
 
 # 依存パッケージをインストール
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Flaskアプリの環境変数を設定
 ENV FLASK_APP=/app/main.py
