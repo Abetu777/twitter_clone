@@ -16,6 +16,7 @@ ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_ENV=production
 
 # エントリーポイントスクリプトを実行可能にする
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # ポートの指定（Flaskのデフォルトポート）
