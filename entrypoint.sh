@@ -1,11 +1,11 @@
 #!/bin/bash
-# entrypoint.sh の例
-
-# PostgreSQL に接続するための待機処理
-echo "Waiting for database connection..."
-while ! nc -z mydatabase 5432; do
+# wait-for-db.shを使用して、DBが接続可能になるまで待機
+echo "Waiting for the database to be available..."
+until nc -z -v -w30 db 5432
+do
+  echo "Waiting for database connection..."
   sleep 1
 done
-
-# Flask アプリケーションの起動
-exec gunicorn app.main:app --bind 0.0.0.0:5000
+echo "Database is up, starting the application..."
+# アプリケーションの起動コマンドを実行
+exec "$@"
