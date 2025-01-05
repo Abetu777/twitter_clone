@@ -12,7 +12,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 # 必要なファイルをコピー
-COPY . /app/
+COPY app/ /app/
 
 # 依存パッケージをインストール
 RUN pip install --no-cache-dir -r /app/requirements.txt
