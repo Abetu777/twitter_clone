@@ -11,7 +11,7 @@ COPY . /app/
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Flaskアプリの環境変数を設定
-ENV FLASK_APP=/app/main.py
+ENV FLASK_APP=app.main
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_ENV=production
 
@@ -26,4 +26,4 @@ EXPOSE 5000
 ENTRYPOINT ["/entrypoint.sh"]
 
 # Flaskアプリケーションを起動
-CMD ["gunicorn", "main:app", "--chdir", "/app", "--bind", "0.0.0.0:5000", "--workers", "3"]
+CMD ["gunicorn", "app.main:app", "--chdir", "/app", "--bind", "0.0.0.0:5000", "--workers", "3"]
