@@ -9,7 +9,7 @@ COPY app/ /app/
 COPY entrypoint.sh /entrypoint.sh
 
 # 依存パッケージをインストール
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Flaskアプリの環境変数を設定
 ENV FLASK_APP=/app/main.py
