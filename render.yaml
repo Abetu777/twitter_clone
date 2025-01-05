@@ -7,4 +7,4 @@ services:
     startCommand: "gunicorn app.main:app --bind 0.0.0.0:5000"
     envVars:
       - key: DATABASE_URL
-        value: "postgresql://user:password@db:5432/mydatabase" 
+        value: "postgresql://user:password@db_host:5432/mydatabase"  # db_host は Render で提供される外部ホスト名に変更

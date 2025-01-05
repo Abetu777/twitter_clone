@@ -8,7 +8,8 @@ services:
     depends_on:
       - db  # webサービスがdbサービスを依存するように指定
     environment:
-      DATABASE_URL: "postgresql://user:password@db:5432/mydatabase"  # dbサービスに接続するための設定
+      DATABASE_URL: "postgresql://user:password@db:5432/mydatabase"  # dbの接続設定
+    command: ["./entrypoint.sh"]  # entrypoint.shを実行
 
   db:
     image: postgres:latest
