@@ -1,6 +1,9 @@
 # ベースイメージ
 FROM python:3.9-slim
 
+# 必要なツールをインストール（ncを含む）
+RUN apt-get update && apt-get install -y netcat
+
 # 作業ディレクトリを設定
 WORKDIR /app
 
